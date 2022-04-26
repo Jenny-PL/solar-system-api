@@ -33,7 +33,10 @@ def get_all_planets():
 
 @planet_bp.route("/<planet_id>", methods=["GET"])
 def get_one_planet(planet_id):
-    planet_id = int(planet_id)
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        return jsonify({'message': 'Invalid input. Enter planet id number'}), 400
     for planet in planet_list:
         if planet.id == planet_id:
             response = {
@@ -43,3 +46,6 @@ def get_one_planet(planet_id):
                 'average distance from earth (million km)': planet.dist_from_earth
             }
             return jsonify(response), 200
+
+    return jsonify({"message": f"Invalid planet_id: {planet_id}. Could not find planet"}), 404
+
