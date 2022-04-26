@@ -30,3 +30,16 @@ def get_all_planets():
             'average distance from earth (million km)': planet.dist_from_earth
         })
     return jsonify(planet_response), 200
+
+@planet_bp.route("/<planet_id>", methods=["GET"])
+def get_one_planet(planet_id):
+    planet_id = int(planet_id)
+    for planet in planet_list:
+        if planet.id == planet_id:
+            response = {
+                'id': planet.id,
+                'name': planet.name,
+                'description': planet.description,
+                'average distance from earth (million km)': planet.dist_from_earth
+            }
+            return jsonify(response), 200
