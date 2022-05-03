@@ -69,6 +69,15 @@ def update_one_planet(planet_id):
     response = {"message": f"Planet {planet.name} successfully updated"}
     return jsonify(response), 200
 
+@planet_bp.route("/<planet_id>", methods=["DELETE"])
+def delete_one_planet(planet_id):
+    planet = validate_planet(planet_id)
+
+    db.session.delete(planet)
+    db.session.commit()
+    response = {"message": f"{planet.name} was successfully deleted"}
+    return jsonify(response), 200
+
 
 
 
