@@ -1,3 +1,4 @@
+from urllib import response
 from flask import Blueprint, jsonify, request, abort, make_response
 from .models.planet import Planet
 from app import db
@@ -33,7 +34,7 @@ def validate_planet(planet_id):
     try:
         planet_id = int(planet_id)
     except:
-        abort(make_response({"message": f"Planet: #{planet_id} is not a valid planet id"}, 400))
+        abort(make_response({"message": f"Planet: {planet_id} is not a valid planet id"}, 400))
     planet = Planet.query.get(planet_id)
     if not planet:
         abort(make_response({"message": f"Planet: #{planet_id} not found"}, 404))
@@ -50,6 +51,24 @@ def get_one_planet(planet_id):
             'dist_from_earth_in_million_km': planet.dist_from_earth_in_million_km
         }
     return jsonify(response), 200
+
+@planet_bp.route("/<planet_id>", methods=["PUT"])
+def update_one_planet(planet_id):
+    planet = validate_planet(planet_id)
+    request_body = request.get_json()
+
+    try:
+        planet.name = request_body["name"]
+        planet.description = request_body["description"]
+        planet.dist_from_earth_in_million_km = request_body['dist_from_earth_in_million_km']
+    except KeyError:
+        return {"message": "Planet name, description, and distance from Earth all required to update planet"}, 400
+
+    db.session.commit()
+
+    response = {"message": f"Planet {planet.name} successfully updated"}
+    return jsonify(response), 200
+
 
 
 
