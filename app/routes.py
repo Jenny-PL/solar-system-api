@@ -30,6 +30,7 @@ def get_all_planets():
         })
     return jsonify(planet_list), 200
 
+# Helper function
 def validate_planet(planet_id):
     try:
         planet_id = int(planet_id)
@@ -77,9 +78,6 @@ def delete_one_planet(planet_id):
     db.session.commit()
     response = {"message": f"{planet.name} was successfully deleted"}
     return jsonify(response), 200
-
-
-
 
 # class Planet:
 #     def __init__(self, id, name, description, dist_from_earth):
