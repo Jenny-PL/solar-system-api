@@ -19,7 +19,16 @@ def create_one_planet():
 
 @planet_bp.route("", methods=["GET"])
 def get_all_planets():
-    planets = Planet.query.all() # this will get all Planet instances
+    name_query = request.args.get('name')
+    distance_query = request.args.get('dist_from_earth_in_million_km')
+    if name_query:
+        planets = Planet.query.filter_by(name=name_query.title())
+    # To get a dictionary of planets that are less than query distance from Earth:   
+    elif distance_query: 
+        planets = db.session.query(Planet).filter(Planet.dist_from_earth_in_million_km<distance_query)
+    else:
+        planets = Planet.query.all() # This will get all Planet instances
+
     planet_list = []
     for planet in planets:
         planet_list.append({
